@@ -1,17 +1,23 @@
 public abstract class Magia {
-    private String nome;
-    private int poder;
-    public Magia(String nome, int poder){
-        this.poder = poder;
-        this.nome = nome;
-    }
-    public int getdano(){
-        return this.poder;
-    }
-    public String getnome(){
-        return this.nome;
-    }
-    public abstract void usemagia(Personagem alvo);
-    public abstract void danoMagia(Personagem alvo);
-}
+  private String nome;
+  private int poder;
 
+  public Magia(String nome, int poder) {
+    this.nome = nome;
+    this.poder = poder;
+  }
+
+  public String getNome() {
+    return nome;
+  }
+
+  public int getPoder() {
+    return poder;
+  }
+
+  /**
+   * Método abstrato para execução da magia.
+   * As subclasses devem implementar a lógica específica.
+   */
+  public abstract void usar(Personagem jogador, Personagem alvo);
+}

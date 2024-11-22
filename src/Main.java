@@ -159,9 +159,9 @@ public class Main {
           int dano = jogador.getDano();
           if (dadoInimigo == 2) { // Defesa
             System.out.println(inimigo.getNome() + " se defendeu! O dano foi reduzido.");
-            dano /= 2; // Reduz dano pela metade
+            dano /= 2;
           }
-          inimigo.calculaDano(dano); // Aplica o dano apenas uma vez
+          inimigo.calculaDano(dano);
         }
       } else {
         System.out.println("Ação falhou! Você perdeu a vez.\n");
@@ -174,11 +174,20 @@ public class Main {
           System.out.println(inimigo.getNome() + " está atacando!\n");
           inimigo.atacar(jogador);
         } else if (dadoInimigo == 3) {
-          // Magias de cura ou roubo de magia
+          if (faseAtual != null && faseAtual.isCuraPermitida()) {
+            System.out.println(inimigo.getNome() + " está se curando!\n");
+            Magias.CURA.executarMagia(inimigo, inimigo);
+          } else if (faseAtual != null && faseAtual.isUsomagia()) {
+            System.out.println(inimigo.getNome() + "Roubou sua mágia");
+            Magias.ROUBOMAGIA.executarMagia(inimigo, jogador);
+          } else {
+            System.out.println(inimigo.getNome() + " tenta se curar, mas a habilidade não está disponível nesta fase!\n");
+          }
+
         }
       }
     }
 
-    return inimigo.estaMorto(); // Retorna se o jogador venceu a batalha
+    return inimigo.estaMorto();
   }
 }

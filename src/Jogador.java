@@ -12,15 +12,14 @@ public class Jogador extends Personagem {
 
   @Override
   public void defender(Personagem alvo) {
-    int danoRecebido = alvo.getDano() / 2;
-    System.out.println(getNome() + " se defendeu contra " + alvo.getNome() + "! Dano reduzido para " + danoRecebido);
-    calculaDano(danoRecebido);
+    System.out.println(getNome() + " se defendeu contra " + alvo.getNome() + "! Dano foi reduzido.");
   }
+
 
   @Override
   public void critico(Personagem alvo) {
     int danoCritico = getDano() * 2; // Supondo que o crítico seja o dobro do dano
-    System.out.println(getNome() + " realizou um ataque crítico em " + alvo.getNome() + ", causando " + danoCritico + " de dano!");
+    System.out.println(getNome() + " realizou um ataque crítico em " + alvo.getNome() + ", causando " + danoCritico + " de dano!\n");
     alvo.calculaDano(danoCritico);
   }
 

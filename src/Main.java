@@ -9,19 +9,45 @@ public class Main {
     apresentarJogo();
 
     Personagem jogador = atributosDoplayer(input);
-    Personagem inimigo = new Inimigo(50, 25, "Goblin", 12);
 
     System.out.println(Falas.TUTORIAL.getTexto());
-    System.out.println(Inimigos.GOBLINS.getInimigo());
+    Personagem goblin = new Inimigo(50, 25, "Goblin");
+    System.out.println("Você está enfrentando o " + goblin.getNome() + "! Prepare-se!");
 
-    //chamasse apeenas esse método, pois os outros 2 estão inclusos
-    boolean jogadorVenceu = batalha(jogador, inimigo, input, random);
+    boolean venceuTutorial = batalha(jogador, goblin, null, input, random);
+    if (!venceuTutorial) {
+      System.out.println("Você foi derrotado pelo Goblin. Melhor sorte na próxima vez!");
+      input.close();
+      return; // Caso jogador perca
+    }
 
-    // Mensagem final
-    if (jogadorVenceu) {
-      System.out.println("Parabéns! Você derrotou " + inimigo.getNome() + "!");
+    System.out.println("Parabéns! Você venceu o tutorial e está pronto para enfrentar os desafios reais!");
+
+    Fases fases = new Fases();
+    int faseAtual = 0;
+
+    while (faseAtual < fases.getQuantidadeDeFases() && !jogador.estaMorto()) {
+      System.out.println("\n=== Fase " + (faseAtual + 1) + " ===");
+      FaseEstrutura fase = fases.getFase(faseAtual);
+      System.out.println("Inimigo: " + fase.getInimigo().getNome());
+
+      boolean jogadorVenceu = batalha(jogador, fase.getInimigo(), fase, input, random);
+
+      if (jogadorVenceu) {
+        System.out.println("Você venceu a fase " + fase.getNome() + "!");
+        jogador.setVida(jogador.getVida() + 25);
+        jogador.setDano(jogador.getDano() + 25);
+        faseAtual++;
+      } else {
+        System.out.println("Você foi derrotado na fase " + fase.getNome() + ". Fim do jogo.");
+        break;
+      }
+    }
+
+    if (jogador.estaMorto()) {
+      System.out.println("Você foi derrotado. Melhor sorte na próxima vez!");
     } else {
-      System.out.println("Você foi derrotado por " + inimigo.getNome() + ". Melhor sorte na próxima vez!");
+      System.out.println("Parabéns! Você completou todas as fases e salvou a humanidade!");
     }
 
     input.close();
@@ -35,12 +61,12 @@ public class Main {
   }
 
   private static Personagem atributosDoplayer(Scanner input) {
-    System.out.println("Qual o seu nome?");
-    String nomeJogador = input.nextLine();
-    if (nomeJogador.trim().isEmpty()) {
+    System.out.println("Qual o nome do seu Herói?");
+    String nomeJogador = input.nextLine().trim();
+    if (nomeJogador.isEmpty()) {
       nomeJogador = "Jogador";
     }
-    Personagem jogador = new Jogador(200, 10, nomeJogador);
+    Personagem jogador = new Jogador(200, 50, nomeJogador);
     System.out.println("Esses são seus atributos:\n");
     System.out.println("Vida: " + jogador.getVida());
     System.out.println("Dano: " + jogador.getDano());
@@ -48,12 +74,30 @@ public class Main {
     return jogador;
   }
 
+  private static int escolhaMagia(Scanner input) {
+    while (true) {
+      System.out.println("Escolha a magia que quer usar:");
+      System.out.println("1 - Bola de Fogo");
+      System.out.println("2 - Feitiço de Vida");
+      try {
+        int escolha = input.nextInt();
+        if (escolha == 1 || escolha == 2) {
+          return escolha;
+        }
+        System.out.println("Escolha inválida! Tente novamente.");
+      } catch (Exception e) {
+        System.out.println("Entrada inválida! Insira um número.");
+        input.nextLine();
+      }
+    }
+  }
+
   public static int escolhaPlayer(Scanner input) {
     while (true) {
       System.out.println("\nEscolha sua ação:");
       System.out.println("1 - Atacar");
       System.out.println("2 - Defender");
-      System.out.println("3 - Usar Habilidade Especial");
+      System.out.println("3 - Usar Habilidade Especial\n");
       try {
         int escolha = input.nextInt();
         if (escolha >= 1 && escolha <= 3) {
@@ -62,54 +106,18 @@ public class Main {
         System.out.println("Escolha inválida! Tente novamente.");
       } catch (Exception e) {
         System.out.println("Entrada inválida! Insira um número.");
-        input.nextLine(); // Limpar entrada inválida
+        input.nextLine();
       }
     }
   }
 
   public static Destino acao(int escolha) {
-    switch (escolha) {
-      case 1:
-        return Destino.ATACAR;
-      case 2:
-        return Destino.DEFENDER;
-      case 3:
-        return Destino.HABILIDADE_ESPECIAL;
-      default:
-        throw new IllegalArgumentException("Escolha inválida.");
-    }
-  }
-
-  public static boolean batalha(Personagem jogador, Personagem inimigo, Scanner input, Random random) {
-    while (!jogador.estaMorto() && !inimigo.estaMorto()) {
-      int escolha = escolhaPlayer(input); // escolhe o numero de 1 a 3 e chamada de metodo do while
-      Destino destino = acao(escolha); //guarda o retorno do metodo acao
-      int dado = random.nextInt(10) + 1;
-      System.out.println("Você rolou o dado: " + dado);
-
-      if (dado >= 8) {
-        System.out.println("Ação crítica! Efeito poderoso!");
-        executarAcaoCritica(destino, jogador, inimigo, input);
-      } else if (dado == 1) {
-        System.out.println("Ação falhou! Você recebeu um dano crítico!");
-        inimigo.critico(jogador);
-      } else if (dado >= 6) {
-        System.out.println("Ação bem-sucedida!");
-        destino.executarAcao(jogador, inimigo);
-      } else {
-        System.out.println("Ação falhou! Você perdeu a vez.");
-      }
-      if (destino == Destino.DEFENDER) {
-        jogador.calculaDano(0);
-      } else {
-        System.out.println(inimigo.getNome() + " está atacando!");
-        inimigo.atacar(jogador);
-
-      }
-
-    }
-
-    return !jogador.estaMorto();
+    return switch (escolha) {
+      case 1 -> Destino.ATACAR;
+      case 2 -> Destino.DEFENDER;
+      case 3 -> Destino.HABILIDADE_ESPECIAL;
+      default -> throw new IllegalArgumentException("Escolha inválida.");
+    };
   }
 
   private static void executarAcaoCritica(Destino destino, Personagem jogador, Personagem inimigo, Scanner input) {
@@ -117,17 +125,60 @@ public class Main {
       jogador.critico(inimigo);
     } else if (destino == Destino.DEFENDER) {
       jogador.defender(inimigo);
-
     } else if (destino == Destino.HABILIDADE_ESPECIAL) {
-      System.out.println("Magia ativa, escolha a magia que quer usar:");
-      System.out.println("1 - Bola de Fogo");
-      System.out.println("2 - Feitiço de Vida");
-      int escolhaMagia = escolhaPlayer(input);
+      int escolhaMagia = escolhaMagia(input);
       if (escolhaMagia == 1) {
         Magias.BOLADEFOGO.executarMagia(jogador, inimigo);
       } else if (escolhaMagia == 2) {
         Magias.CURA.executarMagia(jogador, jogador);
       }
     }
+  }
+
+  public static boolean batalha(Personagem jogador, Personagem inimigo, FaseEstrutura faseAtual, Scanner input, Random random) {
+    while (!jogador.estaMorto() && !inimigo.estaMorto()) {
+      int escolha = escolhaPlayer(input);
+      Destino destino = acao(escolha);
+      int dado = random.nextInt(10) + 1;
+      int dadoInimigo = random.nextInt(4) + 1;
+      System.out.println("Você rolou o dado: " + dado + "\n");
+
+      if (dado >= 8) {
+        System.out.println("Ação crítica! Efeito poderoso!\n");
+        executarAcaoCritica(destino, jogador, inimigo, input);
+        if (destino == Destino.DEFENDER) {
+          System.out.println("Contra-ataque realizado!\n");
+          jogador.critico(inimigo);
+        }
+      } else if (dado == 1) {
+        System.out.println("Ação falhou! Você recebeu um dano crítico!\n");
+        inimigo.critico(jogador);
+      }
+      if (dado >= 6) {
+        if (destino == Destino.ATACAR) {
+          int dano = jogador.getDano();
+          if (dadoInimigo == 2) { // Defesa
+            System.out.println(inimigo.getNome() + " se defendeu! O dano foi reduzido.");
+            dano /= 2; // Reduz dano pela metade
+          }
+          inimigo.calculaDano(dano); // Aplica o dano apenas uma vez
+        }
+      } else {
+        System.out.println("Ação falhou! Você perdeu a vez.\n");
+      }
+
+      //turno inimigo
+
+      if (!inimigo.estaMorto()) {
+        if (dadoInimigo == 1) {
+          System.out.println(inimigo.getNome() + " está atacando!\n");
+          inimigo.atacar(jogador);
+        } else if (dadoInimigo == 3) {
+          // Magias de cura ou roubo de magia
+        }
+      }
+    }
+
+    return inimigo.estaMorto(); // Retorna se o jogador venceu a batalha
   }
 }

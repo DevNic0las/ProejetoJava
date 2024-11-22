@@ -9,4 +9,14 @@ public class Magiafogo extends Magia {
             ", causando " + getPoder() + " de dano!");
     alvo.calculaDano(getPoder());
   }
+
+  public String getNome() {
+    return super.getNome();
+
+  }
+
+  public int getPoder() {
+    return super.getPoder();
+  }
+
 }

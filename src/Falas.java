@@ -6,8 +6,8 @@ public enum Falas {
   TUTORIAL("Tutorial: No caminho, você se depara com uma guangue de globins, e terá que enfrentá-los...\n" +
           "Seus ataques e defesas serão definidos quando jogar o dado, números baixos significam condicões não muito " +
           "boas pra voce, então estará a merce da sorte... Boa sorte.\n"),
-  FASE_1("Primeira fase:\nVocê entra na torre e no terreo, encontra uma besta de 3 cabeças " +
-          "vida:200\npoder mágico:");
+  FASE_1("Primeira fase:\nVocê entra na torre e no terreo, encontra uma besta de 3 cabeças \n" +
+          " vida:200\n poder mágico:Regeneração\n Dano:75");
 
 
   private final String texto;

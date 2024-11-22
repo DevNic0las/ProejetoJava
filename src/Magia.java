@@ -15,9 +15,6 @@ public abstract class Magia {
     return poder;
   }
 
-  /**
-   * Método abstrato para execução da magia.
-   * As subclasses devem implementar a lógica específica.
-   */
+
   public abstract void usar(Personagem jogador, Personagem alvo);
 }

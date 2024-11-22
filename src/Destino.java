@@ -4,7 +4,8 @@ public enum Destino {
   HABILIDADE_ESPECIAL,
   INIMIGO_ATACA,
   ATAQUE_CRITICO,
-  INIMIGO_DEFENDE;
+  INIMIGO_DEFENDE,
+  HABILIDADE_ESPECIAL_INIMIGO;
 
   public void executarAcao(Personagem jogador, Personagem inimigo) {
     switch (this) {
@@ -25,8 +26,11 @@ public enum Destino {
         jogador.defender(inimigo);
         break;
       case HABILIDADE_ESPECIAL:
-        System.out.println("Habilidade especial ativida");
+        System.out.println("Magia sendo utilizada:");
+        break;
+      case HABILIDADE_ESPECIAL_INIMIGO:
+        System.out.println("Magia sendo utilizada:");
         break;
     }
   }
-}
+  }

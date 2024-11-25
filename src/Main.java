@@ -58,10 +58,11 @@ public class Main {
     System.out.println("E você é o único que restou para salvar a humanidade!\n");
     System.out.println("Seu objetivo é derrotar o último monstro da torre, mas cuidado, em cada compartimento...");
     System.out.println("haverá aberrações de diferentes tipos... Boa sorte.\n");
+    System.out.println(Falas.FRASE_INICIAL.getTexto());
   }
 
   private static Personagem atributosDoplayer(Scanner input) {
-    System.out.println("Qual o nome do seu Herói?");
+    System.out.println("\nQual o nome do seu Herói?");
     String nomeJogador = input.nextLine().trim();
     if (nomeJogador.isEmpty()) {
       nomeJogador = "Jogador";
@@ -156,12 +157,16 @@ public class Main {
       }
       if (dado >= 6) {
         if (destino == Destino.ATACAR) {
-          int dano = jogador.getDano();
-          if (dadoInimigo == 2) { // Defesa
-            System.out.println(inimigo.getNome() + " se defendeu! O dano foi reduzido.");
-            dano /= 2;
+          if (dadoInimigo == 2) {
+            // Inimigo defende
+            int danoReduzido = jogador.getDano() / 2; // Reduz dano pela metade
+            System.out.println(inimigo.getNome() + " se defendeu! O dano foi reduzido para " + danoReduzido);
+            inimigo.calculaDano(danoReduzido);
+          } else {
+            // Inimigo não defendeu, jogador ataca normalmente
+            jogador.atacar(inimigo);
+            System.out.println(jogador.getNome() + " atacou " + inimigo.getNome() + " causando " + jogador.getDano() + " de dano.");
           }
-          inimigo.calculaDano(dano);
         }
       } else {
         System.out.println("Ação falhou! Você perdeu a vez.\n");
@@ -173,12 +178,14 @@ public class Main {
         if (dadoInimigo == 1) {
           System.out.println(inimigo.getNome() + " está atacando!\n");
           inimigo.atacar(jogador);
+        } else if (dadoInimigo == 2 && destino == Destino.ATACAR) {
+          inimigo.defender(jogador);
         } else if (dadoInimigo == 3) {
           if (faseAtual != null && faseAtual.isCuraPermitida()) {
             System.out.println(inimigo.getNome() + " está se curando!\n");
             Magias.CURA.executarMagia(inimigo, inimigo);
           } else if (faseAtual != null && faseAtual.isUsomagia()) {
-            System.out.println(inimigo.getNome() + "Roubou sua mágia");
+            System.out.println(inimigo.getNome() + " Roubou sua mágia");
             Magias.ROUBOMAGIA.executarMagia(inimigo, jogador);
           } else {
             System.out.println(inimigo.getNome() + " tenta se curar, mas a habilidade não está disponível nesta fase!\n");
@@ -190,4 +197,6 @@ public class Main {
 
     return inimigo.estaMorto();
   }
+
 }
+

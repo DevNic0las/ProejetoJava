@@ -1,13 +1,13 @@
 public class Jogador extends Personagem {
 
   public Jogador(int vida, int dano, String nome) {
-    super(vida, dano, nome);  // Passa os atributos para a classe pai
+    super(vida, dano, nome);
   }
 
   @Override
-  public void atacar(Personagem alvo) {
-    System.out.println(getNome() + " atacou " + alvo.getNome() + " causando " + getDano() + " de dano!");
-    alvo.calculaDano(getDano());
+  public void atacar(Personagem alvoAtaque) {
+    System.out.println(getNome() + " atacou " + alvoAtaque.getNome() + " causando " + getDano() + " de dano!");
+    alvoAtaque.calculaDano(getDano());
   }
 
   @Override
@@ -18,8 +18,8 @@ public class Jogador extends Personagem {
 
   @Override
   public void critico(Personagem alvo) {
-    int danoCritico = getDano() * 2; // Supondo que o crítico seja o dobro do dano
-    System.out.println(getNome() + " realizou um ataque crítico em " + alvo.getNome() + ", causando " + danoCritico + " de dano!\n");
+    int danoCritico = getDano() * 2;
+    System.out.println(getNome() + " realizou um ataque crítico em  " + alvo.getNome() + ", causando " + danoCritico + " de dano!\n");
     alvo.calculaDano(danoCritico);
   }
 

@@ -35,8 +35,11 @@ public class Main {
 
       if (jogadorVenceu) {
         System.out.println("Você venceu a fase " + fase.getNome() + "!");
-        jogador.setVida(jogador.getVida() + 25);
-        jogador.setDano(jogador.getDano() + 25);
+        int novaVida = jogador.getVida() + 70; // Incremento fixo de 20 de vida
+        int novoDano = jogador.getDano() + 20;
+        jogador.setVida(novaVida);
+        jogador.setDano(novoDano);
+        System.out.println("Sua Vida = " + jogador.getVida() + " seu dano = " + jogador.getDano());
         faseAtual++;
       } else {
         System.out.println("Você foi derrotado na fase " + fase.getNome() + ". Fim do jogo.");
@@ -54,7 +57,7 @@ public class Main {
   }
 
   private static void apresentarJogo() {
-    System.out.println("Olá, Forasteiro! O mundo foi tomado por monstros...\n");
+    System.out.println("\nOlá, Forasteiro! O mundo foi tomado por monstros...\n");
     System.out.println("E você é o único que restou para salvar a humanidade!\n");
     System.out.println("Seu objetivo é derrotar o último monstro da torre, mas cuidado, em cada compartimento...");
     System.out.println("haverá aberrações de diferentes tipos... Boa sorte.\n");
@@ -142,7 +145,7 @@ public class Main {
       Destino destino = acao(escolha);
       int dado = random.nextInt(10) + 1;
       int dadoInimigo = random.nextInt(4) + 1;
-      System.out.println("Você rolou o dado: " + dado + "\n");
+      System.out.println("Resultado do dado: " + dado + "\n");
 
       if (dado >= 8) {
         System.out.println("Ação crítica! Efeito poderoso!\n");
@@ -163,13 +166,20 @@ public class Main {
             System.out.println(inimigo.getNome() + " se defendeu! O dano foi reduzido para " + danoReduzido);
             inimigo.calculaDano(danoReduzido);
           } else {
-            // Inimigo não defendeu, jogador ataca normalmente
+
             jogador.atacar(inimigo);
-            System.out.println(jogador.getNome() + " atacou " + inimigo.getNome() + " causando " + jogador.getDano() + " de dano.");
+
           }
+        }
+        if (destino == Destino.DEFENDER) {
+          jogador.defender(inimigo);
+          int danoReduzidoJogador = jogador.getDano() / 2; // Reduz dano pela metade
+          System.out.println(jogador.getNome() + " se defendeu! O dano foi reduzido para " + danoReduzidoJogador);
+          jogador.calculaDano(danoReduzidoJogador);
         }
       } else {
         System.out.println("Ação falhou! Você perdeu a vez.\n");
+        inimigo.atacar(jogador);
       }
 
       //turno inimigo

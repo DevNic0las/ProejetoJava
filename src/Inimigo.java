@@ -22,7 +22,7 @@ public class Inimigo extends Personagem {
   @Override
   public void critico(Personagem alvo) {
     int danoCritico = getDano() * 2;
-    System.out.println(getNome() + "realizou um ataque crítico em" + alvo.getNome() + "\n");
+    System.out.println(getNome() + " realizou um ataque crítico em " + alvo.getNome() + "\n");
     alvo.calculaDano(danoCritico);
   }
 }

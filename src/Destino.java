@@ -4,20 +4,19 @@ public enum Destino {
   HABILIDADE_ESPECIAL,
   INIMIGO_ATACA,
   ATAQUE_CRITICO,
-  INIMIGO_DEFENDE,
-  HABILIDADE_ESPECIAL_INIMIGO;
+  INIMIGO_DEFENDE;
 
   public void executarAcao(Personagem jogador, Personagem inimigo) {
     switch (this) {
 
       case ATAQUE_CRITICO:
-        System.out.println("recebeu um dano critico");
+        System.out.println(" recebeu um dano critico");
         break;
       case INIMIGO_ATACA:
         inimigo.atacar(jogador);
         break;
       case INIMIGO_DEFENDE:
-        System.out.println("Inimigo se esquivou");
+        System.out.println(" Inimigo se esquivou");
         break;
       case ATACAR:
         jogador.atacar(inimigo);
@@ -26,11 +25,9 @@ public enum Destino {
         jogador.defender(inimigo);
         break;
       case HABILIDADE_ESPECIAL:
-        System.out.println("Magia sendo utilizada:");
+        System.out.println(" Magia sendo utilizada:");
         break;
-      case HABILIDADE_ESPECIAL_INIMIGO:
-        System.out.println("Magia sendo utilizada:");
-        break;
+
     }
   }
   }
